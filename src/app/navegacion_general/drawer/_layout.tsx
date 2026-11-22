@@ -1,9 +1,9 @@
 import { Drawer } from 'expo-router/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from 'nativewind';
+import { useColorScheme } from 'react-native';
 
 export default function DrawerLayout() {
-  const { colorScheme } = useColorScheme();
+  const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
   return (
@@ -27,7 +27,7 @@ export default function DrawerLayout() {
           drawerLabel: 'Reto 21 Días',
           title: 'Reto 21 Días',
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color} />
+            <Ionicons name="calendar-outline" size={size} color={color as string} />
           ),
         }}
       />
@@ -39,7 +39,7 @@ export default function DrawerLayout() {
           drawerLabel: 'Perfil y Ajustes',
           title: 'Perfil y Ajustes',
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
+            <Ionicons name="settings-outline" size={size} color={color as string} />
           ),
         }}
       />
