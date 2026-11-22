@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { ThemedTextProps } from '../../types/habit';
+import { ThemedTextProps } from '../../../types/habit';
 
 export function ThemedText({ children, variant = 'body', className = '', ...props }: ThemedTextProps) {
   let variantStyles = 'text-gray-800 dark:text-gray-100 text-base';

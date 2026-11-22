@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { HabitCardProps } from '../../types/habit';
+import { HabitCardProps } from '../../../types/habit';
 import { ThemedText } from './ThemedText';
 
 export function HabitCard({ habit, currentDay, onToggle }: HabitCardProps) {

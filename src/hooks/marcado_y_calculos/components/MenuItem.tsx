@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { MenuItemProps } from '../../types/habit';
+import { MenuItemProps } from '../../../types/habit';
 import { ThemedText } from './ThemedText';
 
 export function MenuItem({ title, subtitle, iconName, onPress, rightElement }: MenuItemProps) {

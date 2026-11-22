@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ThemedViewProps } from '../../types/habit';
+import { ThemedViewProps } from '../../../types/habit';
 
 export function ThemedView({ children, className = '', ...props }: ThemedViewProps) {
   return (

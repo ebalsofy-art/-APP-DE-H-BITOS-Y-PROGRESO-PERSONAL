@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ProgressCardProps } from '../../types/habit';
+import { ProgressCardProps } from '../../../types/habit';
 import { ThemedText } from './ThemedText';
 
 export function ProgressCard({ title, percentage, completedCount, totalCount, subtitle }: ProgressCardProps) {
