@@ -26,7 +26,7 @@ export default function ProgressScreen() {
         {/* Progreso Global del Reto */}
         <ProgressCard
           title="Avance Global (21 Días)"
-          percentage={stats.overallPercentage}
+          percentage={stats.globalPercentage}
           completedCount={totalCompletedAllDays}
           totalCount={habits.length * 21}
           subtitle={`Has completado ${totalCompletedAllDays} de ${habits.length * 21} metas totales`}
@@ -35,9 +35,9 @@ export default function ProgressScreen() {
         {/* Progreso del Día Seleccionado */}
         <ProgressCard
           title={`Resumen del Día ${selectedDay + 1}`}
-          percentage={stats.dailyPercentage}
-          completedCount={stats.completedToday}
-          totalCount={stats.totalHabits}
+          percentage={stats.dayPercentage}
+          completedCount={stats.dayCompletedCount}
+          totalCount={stats.dayTotalCount}
         />
 
         {/* Desglose individual por hábito */}

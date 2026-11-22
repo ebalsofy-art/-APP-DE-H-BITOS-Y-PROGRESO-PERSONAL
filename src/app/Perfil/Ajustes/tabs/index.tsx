@@ -46,11 +46,11 @@ export default function HomeScreen() {
         </ScrollView>
 
         {/* Tarjeta de progreso del día */}
-        <ProgressCard
+          <ProgressCard
           title={`Progreso del Día ${selectedDay + 1}`}
-          percentage={stats.dailyPercentage}
-          completedCount={stats.completedToday}
-          totalCount={stats.totalHabits}
+          percentage={stats.dayPercentage}
+          completedCount={stats.dayCompletedCount}
+          totalCount={stats.dayTotalCount}
         />
 
         {/* Lista de hábitos del día */}

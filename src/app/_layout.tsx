@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import '../../global.css'; // Asegúrate de que apunte a tu global.css en la raíz
+
+//import '../../global.css';  Asegúrate de que apunte a tu global.css en la raíz
 
 export default function RootLayout() {
   return (
