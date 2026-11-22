@@ -1,47 +1,61 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from 'nativewind';
+import { useColorScheme } from 'react-native';
 
 export default function TabsLayout() {
-  const { colorScheme } = useColorScheme();
+  const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
   return (
     <Tabs
       screenOptions={{
-        headerShown: false, // Ocultamos el header doble porque ya lo tiene el Drawer
-        tabBarStyle: {
-          backgroundColor: isDark ? '#111827' : '#ffffff',
-          borderTopColor: isDark ? '#374151' : '#e5e7eb',
-        },
+        headerShown: false,
         tabBarActiveTintColor: '#3b82f6',
         tabBarInactiveTintColor: isDark ? '#9ca3af' : '#6b7280',
+        tabBarStyle: {
+          backgroundColor: isDark ? '#111827' : '#ffffff',
+          borderTopColor: isDark ? '#1f2937' : '#e5e7eb',
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Hoy',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="today-outline" size={size} color={color} />
+          title: 'Inicio',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              size={size}
+              color={color as string}
+            />
           ),
         }}
       />
+
       <Tabs.Screen
         name="habits"
         options={{
           title: 'Hábitos',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="checkbox-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'checkbox' : 'checkbox-outline'}
+              size={size}
+              color={color as string}
+            />
           ),
         }}
       />
+
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progreso',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="stats-chart-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'stats-chart' : 'stats-chart-outline'}
+              size={size}
+              color={color as string}
+            />
           ),
         }}
       />

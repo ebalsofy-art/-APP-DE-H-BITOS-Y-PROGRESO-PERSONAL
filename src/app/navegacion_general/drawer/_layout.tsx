@@ -20,26 +20,32 @@ export default function DrawerLayout() {
         drawerInactiveTintColor: isDark ? '#9ca3af' : '#4b5563',
       }}
     >
-      {/* Opción 1: Abre las pestañas principales (Inicio, Hábitos, Progreso) */}
       <Drawer.Screen
         name="../../Perfil/Ajustes/tabs"
         options={{
           drawerLabel: 'Reto 21 Días',
           title: 'Reto 21 Días',
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color as string} />
+            <Ionicons
+              name="calendar-outline"
+              size={size}
+              color={color as string}
+            />
           ),
         }}
       />
 
-      {/* Opción 2: Abre la pantalla de Perfil / Ajustes */}
       <Drawer.Screen
         name="../../Perfil/Ajustes/settings"
         options={{
           drawerLabel: 'Perfil y Ajustes',
           title: 'Perfil y Ajustes',
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color as string} />
+            <Ionicons
+              name="settings-outline"
+              size={size}
+              color={color as string}
+            />
           ),
         }}
       />
