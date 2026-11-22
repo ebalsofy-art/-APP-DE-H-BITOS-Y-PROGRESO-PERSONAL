@@ -1,8 +1,8 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { ThemedView } from '../../../../components/ThemedView';
-import { ThemedText } from '../../../../components/ThemedText';
-import { ProgressCard } from '../../../../components/ProgressCard';
+import { ThemedView } from '../../../../hooks/marcado_y_calculos/components/ThemedView';
+import { ThemedText } from '../../../../hooks/marcado_y_calculos/components/ThemedText';
+import { ProgressCard } from '../../../../hooks/marcado_y_calculos/components/ProgressCard';
 import { useHabits } from '../../../../hooks/useHabits';
 
 export default function ProgressScreen() {
