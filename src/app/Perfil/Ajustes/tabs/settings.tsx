@@ -1,33 +1,86 @@
 import React, { useState } from 'react';
-import { ScrollView, Switch, View, Alert, useColorScheme } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-
+import { ScrollView, Switch, View, Alert, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedView } from '../../../../hooks/marcado_y_calculos/components/ThemedView';
 import { ThemedText } from '../../../../hooks/marcado_y_calculos/components/ThemedText';
 import { MenuItem } from '../../../../hooks/marcado_y_calculos/components/MenuItem';
 
 export default function SettingsScreen() {
-  const systemColorScheme = useColorScheme();
-  const [isDark, setIsDark] = useState(systemColorScheme === 'dark');
-  const router = useRouter();
+  const [isDark, setIsDark] = useState(false);
 
-  const toggleColorScheme = () => {
-    setIsDark((prev) => !prev);
+  const handleAbout = () => {
+    Alert.alert('Reto 21 Días', 'Seguimiento de hábitos, agua y progreso diario.');
   };
 
   return (
-    <ThemedView className="flex-1">
-      <ScrollView className="flex-1 px-5 pt-6">
-        <ThemedText variant="title" className="mb-4">
-          Ajustes
-        </ThemedText>
+    <SafeAreaView style={styles.safeArea}>
+      <ThemedView style={styles.container} className="flex-1">
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <ThemedText variant="title" style={styles.title} className="mb-1">
+            Ajustes
+          </ThemedText>
+          <ThemedText variant="caption" style={styles.subtitle} className="mb-4">
+            Configuración de la aplicación
+          </ThemedText>
 
-        <View className="flex-row items-center justify-between p-4 mb-3 bg-gray-50 dark:bg-gray-800 rounded-2xl">
-          <ThemedText variant="subtitle">Modo oscuro</ThemedText>
-          <Switch value={isDark} onValueChange={toggleColorScheme} />
-        </View>
-      </ScrollView>
-    </ThemedView>
+          <View style={styles.switchCard}>
+            <ThemedText variant="subtitle" style={styles.cardTitle}>
+              Modo oscuro
+            </ThemedText>
+            <Switch
+              value={isDark}
+              onValueChange={setIsDark}
+              trackColor={{ false: '#EAD2B5', true: '#F3A675' }}
+              thumbColor={isDark ? '#E07A3F' : '#FFFFFF'}
+            />
+          </View>
+
+          <MenuItem
+              title="Acerca de"
+              subtitle="Reto 21 Días"
+              iconName="information-circle-outline"
+              onPress={handleAbout}
+            />
+        </ScrollView>
+      </ThemedView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FDF6EC',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FDF6EC',
+  },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 28,
+  },
+  title: {
+    color: '#2D221A',
+    fontWeight: '800',
+  },
+  subtitle: {
+    color: '#7A6656',
+  },
+  switchCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFDF9',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#F1DEC6',
+  },
+  cardTitle: {
+    color: '#2D221A',
+    fontWeight: '700',
+  },
+});

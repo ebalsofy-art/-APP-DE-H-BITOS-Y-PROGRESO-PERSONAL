@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Habit } from '../types/habit';
-import { initialHabits } from '../data/initialHabits';
+import { INITIAL_HABITS } from '../data/initialHabits';
 
 const STORAGE_KEY_HABITS = '@reto21_habits_v1';
 const STORAGE_KEY_WATER = '@reto21_water_liters_v1';
@@ -10,8 +10,8 @@ export const WATER_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 export const DAILY_WATER_GOAL = 2;
 
 export function useHabits() {
-  const [habits, setHabits] = useState<Habit[]>(initialHabits);
-  const [selectedDay, setSelectedDay] = useState<number>(0); // índice 0..20 => Día 1..21
+  const [habits, setHabits] = useState<Habit[]>(INITIAL_HABITS);
+  const [selectedDay, setSelectedDay] = useState<number>(0);
   const [waterLitersByDay, setWaterLitersByDay] = useState<Record<number, number>>({});
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -22,15 +22,10 @@ export function useHabits() {
           AsyncStorage.getItem(STORAGE_KEY_HABITS),
           AsyncStorage.getItem(STORAGE_KEY_WATER),
         ]);
-
-        if (savedHabits) {
-          setHabits(JSON.parse(savedHabits));
-        }
-        if (savedWater) {
-          setWaterLitersByDay(JSON.parse(savedWater));
-        }
+        if (savedHabits) setHabits(JSON.parse(savedHabits));
+        if (savedWater) setWaterLitersByDay(JSON.parse(savedWater));
       } catch (e) {
-        console.warn('Error cargando datos guardados:', e);
+        console.warn('Error cargando datos:', e);
       } finally {
         setIsLoaded(true);
       }
@@ -60,20 +55,16 @@ export function useHabits() {
 
   const setWaterLitersForDay = (liters: number, dayIndex: number = selectedDay) => {
     setWaterLitersByDay((prev) => {
-      const current = prev[dayIndex];
-      // Si toca el mismo valor ya seleccionado, permite desmarcarlo; si es otro, lo selecciona
-      const nextValue = current === liters ? 0 : liters;
+      const nextValue = prev[dayIndex] === liters ? 0 : liters;
       const updated = { ...prev, [dayIndex]: nextValue };
 
-      // Sincroniza automáticamente el hábito de agua si existe en initialHabits
       setHabits((prevHabits) =>
         prevHabits.map((habit) => {
-          const isWaterHabit =
+          const isWater =
             habit.id.toLowerCase().includes('water') ||
             habit.id.toLowerCase().includes('agua') ||
             habit.title.toLowerCase().includes('agua');
-
-          if (!isWaterHabit) return habit;
+          if (!isWater) return habit;
           const updatedDays = [...habit.completedDays];
           updatedDays[dayIndex] = nextValue >= DAILY_WATER_GOAL;
           return { ...habit, completedDays: updatedDays };
@@ -94,16 +85,21 @@ export function useHabits() {
     });
 
     const dayCompletedCount = habits.filter((h) => Boolean(h.completedDays[selectedDay])).length;
-    const dayPercentage = habits.length > 0 ? Math.round((dayCompletedCount / habits.length) * 100) : 0;
+    const dayPercentage =
+      habits.length > 0 ? Math.round((dayCompletedCount / habits.length) * 100) : 0;
     const globalPercentage = totalGoals > 0 ? Math.round((totalCompleted / totalGoals) * 100) : 0;
 
     return {
       totalCompleted,
       totalGoals,
       globalPercentage,
+      overallPercentage: globalPercentage,
       dayCompletedCount,
+      completedToday: dayCompletedCount,
       dayTotalCount: habits.length,
+      totalHabits: habits.length,
       dayPercentage,
+      dailyPercentage: dayPercentage,
     };
   }, [habits, selectedDay]);
 

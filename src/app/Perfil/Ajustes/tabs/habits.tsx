@@ -1,75 +1,128 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { ScrollView, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { WATER_OPTIONS, DAILY_WATER_GOAL } from '../../../../hooks/useHabits';
+import { ThemedView } from '../../../../hooks/marcado_y_calculos/components/ThemedView';
+import { ThemedText } from '../../../../hooks/marcado_y_calculos/components/ThemedText';
+import { HabitCard } from '../../../../hooks/marcado_y_calculos/components/HabitCard';
+import {
+  useHabits,
+  WATER_OPTIONS,
+  DAILY_WATER_GOAL,
+} from '../../../../hooks/useHabits';
 
-interface WaterIntakeCardProps {
-  dayNumber: number;
-  selectedLiters: number;
-  onSelectLiters: (liters: number) => void;
-}
+export default function HabitsScreen() {
+  const {
+    habits,
+    selectedDay,
+    toggleHabitDay,
+    selectedDayWaterLiters,
+    setWaterLitersForDay,
+  } = useHabits();
 
-export function WaterIntakeCard({
-  dayNumber,
-  selectedLiters,
-  onSelectLiters,
-}: WaterIntakeCardProps) {
-  const goalReached = selectedLiters >= DAILY_WATER_GOAL;
+  const goalReached = selectedDayWaterLiters >= DAILY_WATER_GOAL;
 
   return (
-    <View style={styles.card}>
-      <View style={styles.headerRow}>
-        <View style={styles.iconBadge}>
-          <Ionicons name="water" size={20} color="#E07A3F" />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.title}>Agua al día · Día {dayNumber}</Text>
-          <Text style={styles.subtitle}>
-            {selectedLiters > 0
-              ? `Seleccionado: ${selectedLiters} L ${goalReached ? '(Meta cumplida)' : `(Meta: ${DAILY_WATER_GOAL} L)`}`
-              : `Elige cuántos litros tomaste hoy (Meta: ${DAILY_WATER_GOAL} L)`}
-          </Text>
-        </View>
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ThemedView style={styles.container} className="flex-1">
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <ThemedText variant="title" style={styles.title} className="mb-1">
+            Mis Hábitos
+          </ThemedText>
+          <ThemedText variant="caption" style={styles.subtitle} className="mb-4">
+            Toca cualquier día (1-21) para marcar tu avance
+          </ThemedText>
 
-      <View style={styles.optionsGrid}>
-        {WATER_OPTIONS.map((liters) => {
-          const active = selectedLiters === liters;
-          return (
-            <TouchableOpacity
-              key={liters}
-              activeOpacity={0.8}
-              onPress={() => onSelectLiters(liters)}
-              style={[styles.optionChip, active && styles.optionChipActive]}
-            >
-              <Text style={[styles.optionText, active && styles.optionTextActive]}>
-                {liters} L
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </View>
+          {/* Selector de litros de agua del día */}
+          <View style={styles.waterCard}>
+            <View style={styles.waterHeader}>
+              <View style={styles.waterBadge}>
+                <Ionicons name="water" size={20} color="#E07A3F" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <ThemedText variant="subtitle" style={styles.cardTitle}>
+                  Agua al día · Día {selectedDay + 1}
+                </ThemedText>
+                <ThemedText variant="caption" style={styles.cardCaption}>
+                  {selectedDayWaterLiters > 0
+                    ? `Seleccionado: ${selectedDayWaterLiters} L ${
+                        goalReached ? '(Meta cumplida)' : `(Meta: ${DAILY_WATER_GOAL} L)`
+                      }`
+                    : `Elige cuántos litros tomaste hoy (Meta: ${DAILY_WATER_GOAL} L)`}
+                </ThemedText>
+              </View>
+            </View>
+
+            <View style={styles.waterChips}>
+              {WATER_OPTIONS.map((liters) => {
+                const active = selectedDayWaterLiters === liters;
+                return (
+                  <TouchableOpacity
+                    key={liters}
+                    activeOpacity={0.8}
+                    onPress={() => setWaterLitersForDay(liters, selectedDay)}
+                    style={[styles.chip, active && styles.chipActive]}
+                  >
+                    <ThemedText style={[styles.chipText, active && styles.chipTextActive]}>
+                      {liters} L
+                    </ThemedText>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+
+          {/* Tarjetas existentes de hábitos */}
+          {habits.map((habit) => (
+            <HabitCard
+              key={habit.id}
+              habit={habit}
+              currentDay={selectedDay}
+              onToggle={toggleHabitDay}
+            />
+          ))}
+        </ScrollView>
+      </ThemedView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FDF6EC',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FDF6EC',
+  },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 28,
+  },
+  title: {
+    color: '#2D221A',
+    fontWeight: '800',
+  },
+  subtitle: {
+    color: '#7A6656',
+  },
+  waterCard: {
     backgroundColor: '#FFFDF9',
     borderRadius: 20,
     padding: 16,
-    marginTop: 8,
-    marginBottom: 24,
+    marginBottom: 16,
     borderWidth: 1,
     borderColor: '#F1DEC6',
   },
-  headerRow: {
+  waterHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     marginBottom: 14,
   },
-  iconBadge: {
+  waterBadge: {
     width: 40,
     height: 40,
     borderRadius: 14,
@@ -77,22 +130,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
+  cardTitle: {
     color: '#2D221A',
+    fontWeight: '700',
   },
-  subtitle: {
-    fontSize: 13,
+  cardCaption: {
     color: '#7A6656',
     marginTop: 2,
   },
-  optionsGrid: {
+  waterChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
   },
-  optionChip: {
+  chip: {
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 14,
@@ -102,16 +153,16 @@ const styles = StyleSheet.create({
     minWidth: 74,
     alignItems: 'center',
   },
-  optionChipActive: {
+  chipActive: {
     backgroundColor: '#E07A3F',
     borderColor: '#E07A3F',
   },
-  optionText: {
+  chipText: {
     fontSize: 14,
     fontWeight: '600',
     color: '#2D221A',
   },
-  optionTextActive: {
+  chipTextActive: {
     color: '#FFFFFF',
   },
 });

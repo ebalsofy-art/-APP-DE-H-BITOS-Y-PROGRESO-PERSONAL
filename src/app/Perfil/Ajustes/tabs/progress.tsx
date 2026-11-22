@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedView } from '../../../../hooks/marcado_y_calculos/components/ThemedView';
 import { ThemedText } from '../../../../hooks/marcado_y_calculos/components/ThemedText';
 import { ProgressCard } from '../../../../hooks/marcado_y_calculos/components/ProgressCard';
@@ -7,60 +8,110 @@ import { useHabits } from '../../../../hooks/useHabits';
 
 export default function ProgressScreen() {
   const { habits, selectedDay, stats } = useHabits();
-
-  const totalCompletedAllDays = habits.reduce(
-    (acc, h) => acc + h.completedDays.filter(Boolean).length,
-    0
-  );
+  const totalCompletedAllDays = stats.totalCompleted;
 
   return (
-    <ThemedView className="flex-1">
-      <ScrollView className="flex-1 px-5 pt-6">
-        <ThemedText variant="title" className="mb-1">
-          Tu Progreso
-        </ThemedText>
-        <ThemedText variant="caption" className="mb-5">
-          Estadísticas de cumplimiento del reto
-        </ThemedText>
+    <SafeAreaView style={styles.safeArea}>
+      <ThemedView style={styles.container} className="flex-1">
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <ThemedText variant="title" style={styles.title} className="mb-1">
+            Tu Progreso
+          </ThemedText>
+          <ThemedText variant="caption" style={styles.subtitle} className="mb-4">
+            Estadísticas de cumplimiento del reto
+          </ThemedText>
 
-        {/* Progreso Global del Reto */}
-        <ProgressCard
-          title="Avance Global (21 Días)"
-          percentage={stats.globalPercentage}
-          completedCount={totalCompletedAllDays}
-          totalCount={habits.length * 21}
-          subtitle={`Has completado ${totalCompletedAllDays} de ${habits.length * 21} metas totales`}
-        />
+          <ProgressCard
+            title="Avance Global (21 Días)"
+            percentage={stats.globalPercentage}
+            completedCount={totalCompletedAllDays}
+            totalCount={habits.length * 21}
+            subtitle={`Has completado ${totalCompletedAllDays} de ${habits.length * 21} metas totales`}
+          />
 
-        {/* Progreso del Día Seleccionado */}
-        <ProgressCard
-          title={`Resumen del Día ${selectedDay + 1}`}
-          percentage={stats.dayPercentage}
-          completedCount={stats.dayCompletedCount}
-          totalCount={stats.dayTotalCount}
-        />
+          <ProgressCard
+            title={`Resumen del Día ${selectedDay + 1}`}
+            percentage={stats.dayPercentage}
+            completedCount={stats.dayCompletedCount}
+            totalCount={stats.dayTotalCount}
+          />
 
-        {/* Desglose individual por hábito */}
-        <ThemedText variant="subtitle" className="mt-3 mb-3">
-          Rendimiento por Hábito
-        </ThemedText>
+          <ThemedText variant="subtitle" style={styles.sectionTitle} className="mt-3 mb-3">
+            Rendimiento por Hábito
+          </ThemedText>
 
-        {habits.map((habit) => {
-          const daysDone = habit.completedDays.filter(Boolean).length;
-          const habitPercent = Math.round((daysDone / 21) * 100);
-
-          return (
-            <ProgressCard
-              key={habit.id}
-              title={habit.title}
-              percentage={habitPercent}
-              completedCount={daysDone}
-              totalCount={21}
-              subtitle={`${daysDone} de 21 días completados`}
-            />
-          );
-        })}
-      </ScrollView>
-    </ThemedView>
+          {habits.map((habit) => {
+            const daysDone = habit.completedDays.filter(Boolean).length;
+            const habitPercent = Math.round((daysDone / 21) * 100);
+            return (
+              <View key={habit.id} style={styles.habitRowCard}>
+                <View style={styles.rowBetween}>
+                  <ThemedText variant="subtitle" style={styles.cardTitle}>
+                    {habit.title}
+                  </ThemedText>
+                  <ThemedText style={styles.percentText}>{habitPercent}%</ThemedText>
+                </View>
+                <ThemedText variant="caption" style={styles.cardCaption}>
+                  {daysDone} de 21 días completados
+                </ThemedText>
+              </View>
+            );
+          })}
+        </ScrollView>
+      </ThemedView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FDF6EC',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FDF6EC',
+  },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 28,
+  },
+  title: {
+    color: '#2D221A',
+    fontWeight: '800',
+  },
+  subtitle: {
+    color: '#7A6656',
+  },
+  sectionTitle: {
+    color: '#2D221A',
+    fontWeight: '700',
+  },
+  habitRowCard: {
+    backgroundColor: '#FFFDF9',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#F1DEC6',
+  },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardTitle: {
+    color: '#2D221A',
+    fontWeight: '700',
+  },
+  cardCaption: {
+    color: '#7A6656',
+    marginTop: 4,
+  },
+  percentText: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#E07A3F',
+  },
+});
