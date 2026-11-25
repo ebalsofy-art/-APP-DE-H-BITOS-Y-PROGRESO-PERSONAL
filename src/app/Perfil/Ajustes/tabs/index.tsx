@@ -17,9 +17,23 @@ export default function HomeScreen() {
           <ThemedText variant="title" style={styles.title} className="mb-1">
             Inicio
           </ThemedText>
-          <ThemedText variant="caption" style={styles.subtitle} className="mb-4">
+          <ThemedText variant="caption" style={styles.subtitle} className="mb-3">
             Selecciona un día y marca tus hábitos de hoy
           </ThemedText>
+
+          {/* Insignia dinámica de avance del día */}
+          <View style={styles.statusBanner}>
+            <Ionicons
+              name={stats.dayPercentage === 100 ? 'trophy' : 'flame'}
+              size={18}
+              color="#E07A3F"
+            />
+            <ThemedText variant="caption" style={styles.statusText}>
+              {stats.dayPercentage === 100
+                ? `¡Día ${selectedDay + 1} completado al 100%!`
+                : `Día ${selectedDay + 1} en marcha · ${stats.dayCompletedCount} de ${stats.dayTotalCount} hábitos listos`}
+            </ThemedText>
+          </View>
 
           {/* Selector horizontal de días (1-21) */}
           <ScrollView
@@ -119,6 +133,23 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: '#7A6656',
+  },
+  statusBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#FBE5CE',
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#F1DEC6',
+  },
+  statusText: {
+    color: '#2D221A',
+    fontWeight: '700',
+    flex: 1,
   },
   sectionTitle: {
     color: '#2D221A',

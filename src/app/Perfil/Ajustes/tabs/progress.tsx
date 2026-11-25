@@ -9,6 +9,9 @@ import { useHabits } from '../../../../hooks/useHabits';
 export default function ProgressScreen() {
   const { habits, selectedDay, stats } = useHabits();
   const totalCompletedAllDays = stats.totalCompleted;
+  const currentDayNum = selectedDay + 1;
+  const nextMilestone = currentDayNum <= 7 ? 7 : currentDayNum <= 14 ? 14 : 21;
+  const daysLeft = Math.max(nextMilestone - currentDayNum, 0);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -30,13 +33,24 @@ export default function ProgressScreen() {
           />
 
           <ProgressCard
-            title={`Resumen del Día ${selectedDay + 1}`}
+            title={`Resumen del Día ${currentDayNum}`}
             percentage={stats.dayPercentage}
             completedCount={stats.dayCompletedCount}
             totalCount={stats.dayTotalCount}
           />
 
-          <ThemedText variant="subtitle" style={styles.sectionTitle} className="mt-3 mb-3">
+          <View style={styles.milestoneCard}>
+            <ThemedText variant="subtitle" style={styles.cardTitle}>
+              Hito del reto: Día {nextMilestone}
+            </ThemedText>
+            <ThemedText variant="caption" style={styles.cardCaption}>
+              {currentDayNum >= 21 && stats.globalPercentage === 100
+                ? '¡Completaste todo el ciclo de 21 días!'
+                : `Estás en el Día ${currentDayNum}. Te faltan ${daysLeft} día(s) para alcanzar el hito del Día ${nextMilestone}.`}
+            </ThemedText>
+          </View>
+
+          <ThemedText variant="subtitle" style={styles.sectionTitle} className="mt-2 mb-3">
             Rendimiento por Hábito
           </ThemedText>
 
@@ -75,7 +89,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 12,
-    paddingBottom: 28,
+    paddingBottom: 32,
   },
   title: {
     color: '#2D221A',
@@ -87,6 +101,14 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: '#2D221A',
     fontWeight: '700',
+  },
+  milestoneCard: {
+    backgroundColor: '#FFF7EE',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#E07A3F',
   },
   habitRowCard: {
     backgroundColor: '#FFFDF9',

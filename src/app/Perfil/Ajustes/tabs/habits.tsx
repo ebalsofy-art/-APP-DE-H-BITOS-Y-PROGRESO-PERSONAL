@@ -71,10 +71,11 @@ export default function HabitsScreen() {
             </View>
           </View>
 
-          {/* Lista seleccionable de hábitos */}
+          {/* Lista seleccionable de hábitos con mini barra de progreso */}
           {habits.map((habit) => {
             const isDone = Boolean(habit.completedDays[selectedDay]);
             const completedTotal = habit.completedDays.filter(Boolean).length;
+            const habitProgress = Math.round((completedTotal / 21) * 100);
 
             return (
               <TouchableOpacity
@@ -102,6 +103,10 @@ export default function HabitsScreen() {
                   <ThemedText variant="caption" style={styles.cardCaption}>
                     {habit.description}
                   </ThemedText>
+
+                  <View style={styles.miniTrack}>
+                    <View style={[styles.miniFill, { width: `${habitProgress}%` }]} />
+                  </View>
                 </View>
 
                 <Ionicons
@@ -232,5 +237,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     color: '#E07A3F',
+  },
+  miniTrack: {
+    height: 6,
+    borderRadius: 999,
+    backgroundColor: '#F1DEC6',
+    overflow: 'hidden',
+    marginTop: 8,
+  },
+  miniFill: {
+    height: '100%',
+    borderRadius: 999,
+    backgroundColor: '#E07A3F',
   },
 });
