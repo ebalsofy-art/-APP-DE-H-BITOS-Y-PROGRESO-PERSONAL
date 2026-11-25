@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedView } from '../../../../hooks/marcado_y_calculos/components/ThemedView';
 import { ThemedText } from '../../../../hooks/marcado_y_calculos/components/ThemedText';
-import { HabitCard } from '../../../../hooks/marcado_y_calculos/components/HabitCard';
 import {
   useHabits,
   WATER_OPTIONS,
@@ -27,10 +26,10 @@ export default function HabitsScreen() {
       <ThemedView style={styles.container} className="flex-1">
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <ThemedText variant="title" style={styles.title} className="mb-1">
-            Mis Hábitos
+            Hábitos
           </ThemedText>
           <ThemedText variant="caption" style={styles.subtitle} className="mb-4">
-            Toca cualquier día (1-21) para marcar tu avance
+            Marca tus hábitos del Día {selectedDay + 1} y registra tu hidratación
           </ThemedText>
 
           {/* Selector de litros de agua del día */}
@@ -72,15 +71,47 @@ export default function HabitsScreen() {
             </View>
           </View>
 
-          {/* Tarjetas existentes de hábitos */}
-          {habits.map((habit) => (
-            <HabitCard
-              key={habit.id}
-              habit={habit}
-              currentDay={selectedDay}
-              onToggle={toggleHabitDay}
-            />
-          ))}
+          {/* Lista seleccionable de hábitos */}
+          {habits.map((habit) => {
+            const isDone = Boolean(habit.completedDays[selectedDay]);
+            const completedTotal = habit.completedDays.filter(Boolean).length;
+
+            return (
+              <TouchableOpacity
+                key={habit.id}
+                activeOpacity={0.8}
+                onPress={() => toggleHabitDay(habit.id, selectedDay)}
+                style={[styles.habitCard, isDone && styles.habitCardDone]}
+              >
+                <View style={[styles.iconBox, isDone && styles.iconBoxDone]}>
+                  <Ionicons
+                    name={(habit.icon as any) || 'checkmark-circle'}
+                    size={20}
+                    color={isDone ? '#FFFFFF' : '#E07A3F'}
+                  />
+                </View>
+
+                <View style={{ flex: 1 }}>
+                  <View style={styles.rowBetween}>
+                    <ThemedText variant="subtitle" style={styles.cardTitle}>
+                      {habit.title}
+                    </ThemedText>
+                    <ThemedText style={styles.streakText}>{completedTotal}/21 días</ThemedText>
+                  </View>
+
+                  <ThemedText variant="caption" style={styles.cardCaption}>
+                    {habit.description}
+                  </ThemedText>
+                </View>
+
+                <Ionicons
+                  name={isDone ? 'checkbox' : 'square-outline'}
+                  size={24}
+                  color={isDone ? '#E07A3F' : '#C7AF91'}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       </ThemedView>
     </SafeAreaView>
@@ -99,7 +130,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 12,
-    paddingBottom: 28,
+    paddingBottom: 32,
   },
   title: {
     color: '#2D221A',
@@ -164,5 +195,42 @@ const styles = StyleSheet.create({
   },
   chipTextActive: {
     color: '#FFFFFF',
+  },
+  habitCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#FFFDF9',
+    borderRadius: 20,
+    padding: 15,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#F1DEC6',
+  },
+  habitCardDone: {
+    borderColor: '#E07A3F',
+    backgroundColor: '#FFF7EE',
+  },
+  iconBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 14,
+    backgroundColor: '#FBE5CE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconBoxDone: {
+    backgroundColor: '#E07A3F',
+  },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 8,
+  },
+  streakText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#E07A3F',
   },
 });

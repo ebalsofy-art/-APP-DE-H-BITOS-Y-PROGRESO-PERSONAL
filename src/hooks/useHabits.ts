@@ -6,12 +6,12 @@ import { INITIAL_HABITS } from '../data/initialHabits';
 const STORAGE_KEY_HABITS = '@reto21_habits_v1';
 const STORAGE_KEY_WATER = '@reto21_water_liters_v1';
 
-export const WATER_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
-export const DAILY_WATER_GOAL = 2;
+export const WATER_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];// Agregar opciones
+export const DAILY_WATER_GOAL = 2 ;//Cambio de meta de agua
 
 export function useHabits() {
   const [habits, setHabits] = useState<Habit[]>(INITIAL_HABITS);
-  const [selectedDay, setSelectedDay] = useState<number>(0);
+  const [selectedDay, setSelectedDay] = useState<number>(0);//Cambio del dia inicial, de 1 a 5
   const [waterLitersByDay, setWaterLitersByDay] = useState<Record<number, number>>({});
   const [isLoaded, setIsLoaded] = useState(false);
 
